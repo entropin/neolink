@@ -1,5 +1,4 @@
-***REMOVED***[cfg(test)] ***REMOVED***[macro_use]
-extern crate indoc;
+***REMOVED***![allow(dead_code)] // while I'm still fleshing this out
 
 mod bc;
 
