@@ -4,7 +4,7 @@
 use std::io::{Read, Write};
 // YaSerde is currently naming the traits and the derive macros identically
 use yaserde_derive::{YaDeserialize, YaSerialize};
-use yaserde::{YaDeserialize, YaSerialize};
+use yaserde::{ser::Config, YaDeserialize, YaSerialize};
 // YaSerde currently needs this imported
 ***REMOVED***[allow(pub_use_of_private_extern_crate)]
 use yaserde::log;
@@ -12,7 +12,7 @@ use yaserde::log;
 ***REMOVED***[cfg(test)]
 use indoc::indoc;
 
-***REMOVED***[derive(PartialEq, Default, Debug, YaDeserialize, YaSerialize)]
+***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 ***REMOVED***[yaserde(rename="body")]
 pub struct Body {
     ***REMOVED***[yaserde(rename="Encryption")]
@@ -27,9 +27,12 @@ impl Body {
     pub fn try_parse(s: impl Read) -> Result<Self, String> {
         yaserde::de::from_reader(s)
     }
+    pub fn serialize<W: Write>(&self, w: W) -> Result<W, String> {
+        yaserde::ser::serialize_with_writer(self, w, &Config::default())
+    }
 }
 
-***REMOVED***[derive(PartialEq, Default, Debug, YaDeserialize, YaSerialize)]
+***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct Encryption {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
@@ -38,8 +41,7 @@ pub struct Encryption {
     pub nonce: String,
 }
 
-***REMOVED***[derive(PartialEq, Default, Debug, YaDeserialize, YaSerialize)]
-***REMOVED***[yaserde(rename_all="camelCase")]
+***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct LoginUser {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
@@ -50,8 +52,7 @@ pub struct LoginUser {
     pub user_ver: u32,
 }
 
-***REMOVED***[derive(PartialEq, Default, Debug, YaDeserialize, YaSerialize)]
-***REMOVED***[yaserde(rename_all="camelCase")]
+***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct LoginNet {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
@@ -139,8 +140,8 @@ fn test_login_ser() {
         ..Body::default()
     };
 
-    let b2: Body = yaserde::de::from_str(sample).unwrap();
-    let b3: Body = yaserde::de::from_str(&yaserde::ser::to_string(&b).unwrap()).unwrap();
+    let b2 = Body::try_parse(sample.as_bytes()).unwrap();
+    let b3 = Body::try_parse(yaserde::ser::to_string(&b).unwrap().as_bytes()).unwrap();
 
     assert_eq!(b, b2);
     assert_eq!(b, b3);
