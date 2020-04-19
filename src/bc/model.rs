@@ -28,7 +28,8 @@ pub enum LegacyMsg {
     LoginMsg {
         username: String,
         password: String,
-    }
+    },
+    UnknownMsg,
 }
 
 ***REMOVED***[derive(Debug, PartialEq, Eq)]
