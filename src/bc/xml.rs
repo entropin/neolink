@@ -21,6 +21,8 @@ pub struct Body {
     pub login_user: Option<LoginUser>,
     ***REMOVED***[yaserde(rename="LoginNet")]
     pub login_net: Option<LoginNet>,
+    ***REMOVED***[yaserde(rename="DeviceInfo")]
+    pub device_info: Option<DeviceInfo>,
 }
 
 impl Body {
@@ -71,6 +73,21 @@ impl Default for LoginNet {
         }
     }
 }
+
+***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
+pub struct DeviceInfo {
+    ***REMOVED***[yaserde(rename="Resolution")]
+    pub resolution: Resolution,
+}
+
+***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
+pub struct Resolution {
+    ***REMOVED***[yaserde(rename="resolutionName")]
+    pub name: String,
+    pub width: u32,
+    pub height: u32,
+}
+
 
 pub fn xml_ver() -> String {
     "1.1".to_string()
