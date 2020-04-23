@@ -1,7 +1,10 @@
+***REMOVED***![allow(dead_code)]
+***REMOVED***![allow(unused_variables)]
 mod bc;
 mod bc_protocol;
 mod config;
 mod cmdline;
+mod gst;
 
 use bc_protocol::BcCamera;
 use config::{Config, CameraConfig};
