@@ -1,13 +1,13 @@
 ***REMOVED***
+
+***REMOVED***
 name = "driveway"
 ***REMOVED***
 password = "12345678"
 address = "192.168.1.187:9000"
-serve = { port = 9900 }
 
 ***REMOVED***
 name = "storage shed"
 ***REMOVED***
 password = "987654321"
 address = "192.168.1.245:9000"
-serve = { port = 9901 }
