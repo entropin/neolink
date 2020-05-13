@@ -25,7 +25,7 @@ impl Default for AllTopXmls {
 }
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
-***REMOVED***[yaserde(root="body")]
+***REMOVED***[yaserde(rename="body")]
 pub struct BcXml {
     ***REMOVED***[yaserde(rename="Encryption")]
     pub encryption: Option<Encryption>,
