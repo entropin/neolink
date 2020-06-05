@@ -3,8 +3,8 @@
 
 use std::io::{Read, Write};
 // YaSerde is currently naming the traits and the derive macros identically
-use yaserde_derive::{YaDeserialize, YaSerialize};
 use yaserde::{ser::Config, YaDeserialize, YaSerialize};
+use yaserde_derive::{YaDeserialize, YaSerialize};
 
 ***REMOVED***[cfg(test)]
 use indoc::indoc;
@@ -12,7 +12,7 @@ use indoc::indoc;
 ***REMOVED***[derive(PartialEq, Eq, Debug, YaDeserialize)]
 ***REMOVED***[yaserde(flatten)]
 pub(super) enum AllTopXmls {
-    ***REMOVED***[yaserde(rename="body")]
+    ***REMOVED***[yaserde(rename = "body")]
     BcXml(BcXml),
     Extension(Extension),
 }
@@ -25,17 +25,17 @@ impl Default for AllTopXmls {
 }
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
-***REMOVED***[yaserde(rename="body")]
+***REMOVED***[yaserde(rename = "body")]
 pub struct BcXml {
-    ***REMOVED***[yaserde(rename="Encryption")]
+    ***REMOVED***[yaserde(rename = "Encryption")]
     pub encryption: Option<Encryption>,
-    ***REMOVED***[yaserde(rename="LoginUser")]
+    ***REMOVED***[yaserde(rename = "LoginUser")]
     pub login_user: Option<LoginUser>,
-    ***REMOVED***[yaserde(rename="LoginNet")]
+    ***REMOVED***[yaserde(rename = "LoginNet")]
     pub login_net: Option<LoginNet>,
-    ***REMOVED***[yaserde(rename="DeviceInfo")]
+    ***REMOVED***[yaserde(rename = "DeviceInfo")]
     pub device_info: Option<DeviceInfo>,
-    ***REMOVED***[yaserde(rename="Preview")]
+    ***REMOVED***[yaserde(rename = "Preview")]
     pub preview: Option<Preview>,
 }
 
@@ -58,7 +58,7 @@ impl BcXml {
 pub struct Encryption {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
-    ***REMOVED***[yaserde(rename="type")]
+    ***REMOVED***[yaserde(rename = "type")]
     pub type_: String,
     pub nonce: String,
 }
@@ -67,10 +67,10 @@ pub struct Encryption {
 pub struct LoginUser {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
-    ***REMOVED***[yaserde(rename="userName")]
+    ***REMOVED***[yaserde(rename = "userName")]
     pub user_name: String,
     pub password: String,
-    ***REMOVED***[yaserde(rename="userVer")]
+    ***REMOVED***[yaserde(rename = "userVer")]
     pub user_ver: u32,
 }
 
@@ -78,9 +78,9 @@ pub struct LoginUser {
 pub struct LoginNet {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
-    ***REMOVED***[yaserde(rename="type")]
+    ***REMOVED***[yaserde(rename = "type")]
     pub type_: String,
-    ***REMOVED***[yaserde(rename="udpPort")]
+    ***REMOVED***[yaserde(rename = "udpPort")]
     pub udp_port: u16,
 }
 
@@ -101,7 +101,7 @@ pub struct DeviceInfo {
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct Resolution {
-    ***REMOVED***[yaserde(rename="resolutionName")]
+    ***REMOVED***[yaserde(rename = "resolutionName")]
     pub name: String,
     pub width: u32,
     pub height: u32,
@@ -112,16 +112,16 @@ pub struct Preview {
     ***REMOVED***[yaserde(attribute)]
     pub version: String,
 
-    ***REMOVED***[yaserde(rename="channelId")]
+    ***REMOVED***[yaserde(rename = "channelId")]
     pub channel_id: u32,
     pub handle: u32,
-    ***REMOVED***[yaserde(rename="streamType")]
+    ***REMOVED***[yaserde(rename = "streamType")]
     pub stream_type: String,
 }
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct Extension {
-    ***REMOVED***[yaserde(rename="binaryData")]
+    ***REMOVED***[yaserde(rename = "binaryData")]
     pub binary_data: u32,
 }
 
@@ -131,14 +131,16 @@ pub fn xml_ver() -> String {
 
 ***REMOVED***[test]
 fn test_encryption_deser() {
-    let sample = indoc!(r***REMOVED***"
+    let sample = indoc!(
+        r***REMOVED***"
         <?xml version="1.0" encoding="UTF-8" ?>
         <body>
         <Encryption version="1.1">
         <type>md5</type>
         <nonce>9E6D1FCB9E69846D</nonce>
         </Encryption>
-        </body>"***REMOVED***);
+        </body>"***REMOVED***
+    );
     let b: BcXml = yaserde::de::from_str(sample).unwrap();
     let enc = b.encryption.as_ref().unwrap();
 
@@ -149,13 +151,14 @@ fn test_encryption_deser() {
     let t = AllTopXmls::try_parse(sample.as_bytes()).unwrap();
     match t {
         AllTopXmls::BcXml(top_b) if top_b == b => assert!(true),
-        _ => assert!(false)
+        _ => assert!(false),
     }
 }
 
 ***REMOVED***[test]
 fn test_login_deser() {
-    let sample = indoc!(r***REMOVED***"
+    let sample = indoc!(
+        r***REMOVED***"
         <?xml version="1.0" encoding="UTF-8" ?>
         <body>
         <LoginUser version="1.1">
@@ -167,7 +170,8 @@ fn test_login_deser() {
         <type>LAN</type>
         <udpPort>0</udpPort>
         </LoginNet>
-        </body>"***REMOVED***);
+        </body>"***REMOVED***
+    );
     let b: BcXml = yaserde::de::from_str(sample).unwrap();
     let login_user = b.login_user.unwrap();
     let login_net = b.login_net.unwrap();
@@ -184,7 +188,8 @@ fn test_login_deser() {
 
 ***REMOVED***[test]
 fn test_login_ser() {
-    let sample = indoc!(r***REMOVED***"
+    let sample = indoc!(
+        r***REMOVED***"
         <?xml version="1.0" encoding="UTF-8" ?>
         <body>
         <LoginUser version="1.1">
@@ -196,7 +201,8 @@ fn test_login_ser() {
         <type>LAN</type>
         <udpPort>0</udpPort>
         </LoginNet>
-        </body>"***REMOVED***);
+        </body>"***REMOVED***
+    );
 
     let b = BcXml {
         login_user: Some(LoginUser {
@@ -214,7 +220,7 @@ fn test_login_ser() {
     };
 
     let b2 = BcXml::try_parse(sample.as_bytes()).unwrap();
-    let b3 = BcXml::try_parse(b.serialize(vec!()).unwrap().as_slice()).unwrap();
+    let b3 = BcXml::try_parse(b.serialize(vec![]).unwrap().as_slice()).unwrap();
 
     assert_eq!(b, b2);
     assert_eq!(b, b3);
@@ -223,7 +229,8 @@ fn test_login_ser() {
 
 ***REMOVED***[test]
 fn test_deviceinfo_partial_deser() {
-    let sample = indoc!(r***REMOVED***"
+    let sample = indoc!(
+        r***REMOVED***"
         <?xml version="1.0" encoding="UTF-8" ?>
         <body>
         <DeviceInfo version="1.1">
@@ -243,21 +250,26 @@ fn test_deviceinfo_partial_deser() {
         <supportAutoUpdate>0</supportAutoUpdate>
         <userVer>1</userVer>
         </DeviceInfo>
-        </body>"***REMOVED***);
+        </body>"***REMOVED***
+    );
 
     // Needs to ignore all the other crap that we don't care about
     let b = BcXml::try_parse(sample.as_bytes()).unwrap();
     match b {
         BcXml {
-            device_info: Some(DeviceInfo {
-                resolution: Resolution {
-                    width: 3840,
-                    height: 2160,
+            device_info:
+                Some(DeviceInfo {
+                    resolution:
+                        Resolution {
+                            width: 3840,
+                            height: 2160,
+                            ..
+                        },
                     ..
-                }, ..
-            }), ..
+                }),
+            ..
         } => assert!(true),
-        _ => assert!(false)
+        _ => assert!(false),
     }
 }
 
@@ -265,15 +277,17 @@ fn test_deviceinfo_partial_deser() {
 fn test_binary_deser() {
     let _ = env_logger::builder().is_test(true).try_init();
 
-    let sample = indoc!(r***REMOVED***"
+    let sample = indoc!(
+        r***REMOVED***"
         <?xml version="1.0" encoding="UTF-8" ?>
         <Extension version="1.1">
         <binaryData>1</binaryData>
         </Extension>
-    "***REMOVED***);
+    "***REMOVED***
+    );
     let b = AllTopXmls::try_parse(sample.as_bytes()).unwrap();
     match b {
         AllTopXmls::Extension(Extension { binary_data: 1 }) => assert!(true),
-        _ => assert!(false)
+        _ => assert!(false),
     }
 }

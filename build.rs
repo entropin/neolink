@@ -10,5 +10,4 @@ fn main() {
 }
 
 ***REMOVED***[cfg(not(windows))]
-fn main() {
-}
+fn main() {}
