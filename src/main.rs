@@ -1,13 +1,17 @@
+***REMOVED***[macro_use] extern crate validator_derive;
+***REMOVED***[macro_use] extern crate lazy_static;
+
 use env_logger::Env;
 use err_derive::Error;
 use log::*;
 use neolink::bc_protocol::BcCamera;
-use neolink::gst::{MaybeAppSrc, RtspServer};
+use neolink::gst::{MaybeAppSrc, RtspServer, StreamFormat};
 use neolink::Never;
 use std::fs;
 use std::io::Write;
 use std::time::Duration;
 use structopt::StructOpt;
+use validator::Validate;
 
 mod cmdline;
 mod config;
@@ -23,6 +27,8 @@ pub enum Error {
     ProtocolError(***REMOVED***[error(source)] neolink::Error),
     ***REMOVED***[error(display = "I/O error")]
     IoError(***REMOVED***[error(source)] std::io::Error),
+    ***REMOVED***[error(display = "Validation error")]
+    ValidationError(***REMOVED***[error(source)] validator::ValidationErrors),
 }
 
 fn main() -> Result<(), Error> {
@@ -36,6 +42,13 @@ fn main() -> Result<(), Error> {
 
     let opt = Opt::from_args();
     let config: Config = toml::from_str(&fs::read_to_string(opt.config)?)?;
+
+    for camera in &config.cameras {
+        match camera.validate() {
+            Ok(_) => (),
+            Err(e) => return Err(Error::ValidationError(e)),
+        };
+    }
 
     let rtsp = &RtspServer::new();
 
