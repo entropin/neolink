@@ -12,6 +12,7 @@ lazy_static! {
 
 ***REMOVED***[derive(Debug, Deserialize, Validate, Clone)]
 pub struct Config {
+    ***REMOVED***[validate]
     pub cameras: Vec<CameraConfig>,
 
     ***REMOVED***[serde(rename = "bind", default = "default_bind_addr")]
