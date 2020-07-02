@@ -8,6 +8,7 @@ use regex::Regex;
 lazy_static! {
     static ref RE_STREAM_FORM: Regex = Regex::new(r"^([hH]26[45]|[ \t]*[!].*)$").unwrap();
     static ref RE_STREAM_SRC: Regex = Regex::new(r"^(mainStream|subStream|both)$").unwrap();
+    static ref RE_TLS_CLIENT_AUTH: Regex = Regex::new(r"^(none|request|require)$").unwrap();
 }
 
 ***REMOVED***[derive(Debug, Deserialize, Validate, Clone)]
@@ -21,6 +22,13 @@ pub struct Config {
     ***REMOVED***[validate(range(min = 0, max = 65535, message = "Invalid port", code = "bind_port"))]
     ***REMOVED***[serde(default = "default_bind_port")]
     pub bind_port: u16,
+
+    ***REMOVED***[serde(default = "default_certificate")]
+    pub certificate: String,
+
+    ***REMOVED***[validate(regex(path = "RE_TLS_CLIENT_AUTH", message = "Incorrect stream format", code = "format"))]
+    ***REMOVED***[serde(default = "default_tls_client_auth")]
+    pub tls_client_auth: String,
 }
 
 ***REMOVED***[derive(Debug, Deserialize, Validate, Clone)]
@@ -58,4 +66,12 @@ fn default_format() -> String {
 
 fn default_stream() -> String {
     "both".to_string()
+}
+
+fn default_certificate() -> String {
+    "".to_string()
+}
+
+fn default_tls_client_auth() -> String {
+    "none".to_string()
 }
