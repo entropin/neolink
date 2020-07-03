@@ -12,15 +12,7 @@ RUN apk add --no-cache musl-dev gcc
 ***REMOVED*** Use static linking to work around https://github.com/rust-lang/rust/pull/58575
 ENV RUSTFLAGS='-C target-feature=-crt-static'
 
-***REMOVED*** Compile dependencies before main app to save rebuild time
-***REMOVED*** https://github.com/errmac-v/cargo-build-dependencies
-RUN cargo install cargo-build-dependencies
-RUN mkdir /usr/local/src \
-  && cd /usr/local/src \
-  && USER=root cargo new --bin neolink
 WORKDIR /usr/local/src/neolink
-COPY Cargo.toml Cargo.lock ./
-RUN cargo build-dependencies --release
 
 ***REMOVED*** Build the main program
 COPY . /usr/local/src/neolink
