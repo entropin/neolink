@@ -1,13 +1,43 @@
 ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+[[users]]
+name = "me"
+pass = "mepass"
+
+[[users]]
+name = "someone"
+pass = "someonepass"
+
 
 ***REMOVED***
 name = "driveway"
 ***REMOVED***
 password = "12345678"
 address = "192.168.1.187:9000"
+***REMOVED*** By default any of the users can connect (or anyone at all if no users are specfied)
+***REMOVED*** You can uncomment the following to permit only specfic users
+***REMOVED*** permitted_users = [ "me" ]
 
 ***REMOVED***
 name = "storage shed"
 ***REMOVED***
 password = "987654321"
 address = "192.168.1.245:9000"
+***REMOVED*** By default the camera is assumed to be in H.265 format
+***REMOVED*** Some camera's e.g. E1 use H.264. You can use the following to change this
+***REMOVED*** format = "h264"
