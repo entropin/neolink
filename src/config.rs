@@ -30,8 +30,8 @@ pub struct Config {
 
     ***REMOVED***[validate(regex(
         path = "RE_TLS_CLIENT_AUTH",
-        message = "Incorrect stream format",
-        code = "format"
+        message = "Incorrect tls auth",
+        code = "tls_client_auth"
     ))]
     ***REMOVED***[serde(default = "default_tls_client_auth")]
     pub tls_client_auth: String,
