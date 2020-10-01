@@ -125,6 +125,8 @@ pub struct Preview {
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct Extension {
+    ***REMOVED***[yaserde(attribute)]
+    pub version: String,
     ***REMOVED***[yaserde(rename = "binaryData")]
     pub binary_data: u32,
 }
