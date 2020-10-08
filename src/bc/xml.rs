@@ -11,21 +11,6 @@ use indoc::indoc;
 
 ***REMOVED***[derive(PartialEq, Eq, Debug, YaDeserialize)]
 ***REMOVED***[yaserde(flatten)]
-pub enum BcXmls {
-    ***REMOVED***[yaserde(rename = "body")]
-    BcXml(BcXml),
-    Extension(Extension),
-}
-
-// Required for YaDeserialize
-impl Default for BcXmls {
-    fn default() -> Self {
-        BcXmls::BcXml(Default::default())
-    }
-}
-
-***REMOVED***[derive(PartialEq, Eq, Debug, YaDeserialize)]
-***REMOVED***[yaserde(flatten)]
 pub enum BcPayloads {
     ***REMOVED***[yaserde(rename = "body")]
     BcXml(BcXml),
@@ -57,12 +42,6 @@ pub struct BcXml {
     pub system_general: Option<SystemGeneral>,
     ***REMOVED***[yaserde(rename = "Norm")]
     pub norm: Option<Norm>,
-}
-
-impl BcXmls {
-    pub fn try_parse(s: impl Read) -> Result<Self, String> {
-        yaserde::de::from_reader(s)
-    }
 }
 
 impl BcXml {
