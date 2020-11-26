@@ -74,7 +74,7 @@ pub struct CameraConfig {
 
     ***REMOVED***[validate(range(min = 0, max = 31, message = "Invalid channel", code = "channel_id"))]
     ***REMOVED***[serde(default = "default_channel_id")]
-    pub channel_id: u32,
+    pub channel_id: u8,
 }
 
 ***REMOVED***[derive(Debug, Deserialize, Validate, Clone)]
