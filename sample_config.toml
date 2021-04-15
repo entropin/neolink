@@ -2,11 +2,16 @@
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
+
 ***REMOVED***
 ***REMOVED***
 
 ***REMOVED***
 ***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
 ***REMOVED***
 ***REMOVED***
 ***REMOVED***
@@ -30,15 +35,22 @@ name = "driveway"
 ***REMOVED***
 password = "12345678"
 address = "192.168.1.187:9000"
+
 ***REMOVED*** By default any of the users can connect (or anyone at all if no users are specfied)
 ***REMOVED*** You can uncomment the following to permit only specfic users
 ***REMOVED*** permitted_users = [ "me" ]
+
+***REMOVED*** By default "both" "mainStream" and "subStream" are connected
+***REMOVED*** If your device has user connection limits try a single stream instead.
+***REMOVED*** stream = "mainStream"
+
 
 ***REMOVED***
 name = "storage shed"
 ***REMOVED***
 password = "987654321"
 address = "192.168.1.245:9000"
-***REMOVED*** By default the camera is assumed to be in H.265 format
-***REMOVED*** Some camera's e.g. E1 use H.264. You can use the following to change this
-***REMOVED*** format = "h264"
+
+***REMOVED*** By default channel_id = 0. Eg the first connected camera on the device
+***REMOVED*** Note this counts from 0. An 8 channel NVR would have channels 0 through 7
+***REMOVED*** channel_id = 1
