@@ -11,16 +11,17 @@ use indoc::indoc;
 
 ***REMOVED***[derive(PartialEq, Eq, Debug, YaDeserialize)]
 ***REMOVED***[yaserde(flatten)]
-pub(super) enum AllTopXmls {
+pub enum BcPayloads {
     ***REMOVED***[yaserde(rename = "body")]
     BcXml(BcXml),
-    Extension(Extension),
+    ***REMOVED***[yaserde(flatten)]
+    Binary(Vec<u8>),
 }
 
 // Required for YaDeserialize
-impl Default for AllTopXmls {
+impl Default for BcPayloads {
     fn default() -> Self {
-        AllTopXmls::BcXml(Default::default())
+        BcPayloads::Binary(Default::default())
     }
 }
 
@@ -45,13 +46,16 @@ pub struct BcXml {
     pub norm: Option<Norm>,
 }
 
-impl AllTopXmls {
+impl BcXml {
     pub fn try_parse(s: impl Read) -> Result<Self, String> {
         yaserde::de::from_reader(s)
     }
+    pub fn serialize<W: Write>(&self, w: W) -> Result<W, String> {
+        yaserde::ser::serialize_with_writer(self, w, &Config::default())
+    }
 }
 
-impl BcXml {
+impl Extension {
     pub fn try_parse(s: impl Read) -> Result<Self, String> {
         yaserde::de::from_reader(s)
     }
@@ -130,7 +134,7 @@ pub struct Preview {
     pub version: String,
 
     ***REMOVED***[yaserde(rename = "channelId")]
-    pub channel_id: u32,
+    pub channel_id: u8,
     pub handle: u32,
     ***REMOVED***[yaserde(rename = "streamType")]
     pub stream_type: String,
@@ -138,8 +142,15 @@ pub struct Preview {
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
 pub struct Extension {
+    ***REMOVED***[yaserde(attribute)]
+    pub version: String,
     ***REMOVED***[yaserde(rename = "binaryData")]
-    pub binary_data: u32,
+    pub binary_data: Option<u32>,
+    ***REMOVED***[yaserde(rename = "userName")]
+    pub user_name: Option<String>,
+    pub token: Option<String>,
+    ***REMOVED***[yaserde(rename = "channelId")]
+    pub channel_id: Option<u8>,
 }
 
 ***REMOVED***[derive(PartialEq, Eq, Default, Debug, YaDeserialize, YaSerialize)]
@@ -196,9 +207,9 @@ fn test_encryption_deser() {
     assert_eq!(enc.nonce, "9E6D1FCB9E69846D");
     assert_eq!(enc.type_, "md5");
 
-    let t = AllTopXmls::try_parse(sample.as_bytes()).unwrap();
+    let t = BcXml::try_parse(sample.as_bytes()).unwrap();
     match t {
-        AllTopXmls::BcXml(top_b) if top_b == b => assert!(true),
+        top_b if top_b == b => assert!(true),
         _ => assert!(false),
     }
 }
@@ -333,9 +344,12 @@ fn test_binary_deser() {
         </Extension>
     "***REMOVED***
     );
-    let b = AllTopXmls::try_parse(sample.as_bytes()).unwrap();
+    let b = Extension::try_parse(sample.as_bytes()).unwrap();
     match b {
-        AllTopXmls::Extension(Extension { binary_data: 1 }) => assert!(true),
+        Extension {
+            binary_data: Some(1),
+            ..
+        } => assert!(true),
         _ => assert!(false),
     }
 }
