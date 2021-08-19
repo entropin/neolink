@@ -105,12 +105,7 @@ impl BcCamera {
     ///
     /// BcMediaIframe Package
     ///
-    pub fn capture_frame(
-        &self,
-        stream_name: &str,
-        init_stream: bool,
-    ) -> Result<BcMediaIframe>
-    {
+    pub fn capture_frame(&self, stream_name: &str, init_stream: bool) -> Result<BcMediaIframe> {
         let connection = self
             .connection
             .as_ref()
