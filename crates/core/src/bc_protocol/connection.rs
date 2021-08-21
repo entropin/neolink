@@ -1,5 +1,6 @@
 use crate::bc;
 use crate::bc::model::*;
+use crossbeam::{unbounded, Receiver, Sender};
 use err_derive::Error;
 use log::*;
 use socket2::{Domain, Socket, Type};
@@ -9,7 +10,6 @@ use std::error::Error as StdErr; // Just need the traits
 use std::net::{Shutdown, SocketAddr, TcpStream};
 use std::sync::{atomic::AtomicBool, atomic::Ordering, Arc, Mutex};
 use std::thread::JoinHandle;
-use crossbeam::{Receiver, Sender, unbounded};
 use std::time::Duration;
 
 /// A shareable connection to a camera.  Handles serialization of messages.  To send/receive, call
