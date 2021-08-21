@@ -46,6 +46,10 @@ pub enum Error {
     #[error(display = "Timeout")]
     Timeout,
 
+    /// Raised when the RecvTimeoutError is reach
+    #[error(display = "Chanel Timeout")]
+    CrossbeamRecvTimeout(#[error(source)] crossbeam::RecvTimeoutError),
+
     /// Raised when connection is dropped because the timeout is reach
     #[error(display = "Dropped connection")]
     TimeoutDisconnected,

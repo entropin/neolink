@@ -1,9 +1,8 @@
+use crossbeam::RecvTimeoutError;
 use super::{connection::BcSubscription, RX_TIMEOUT};
 use crate::bc::model::*;
 use std::{
-    io::{BufRead, Error, ErrorKind, Read},
-    sync::mpsc::RecvTimeoutError,
-};
+    io::{BufRead, Error, ErrorKind, Read},};
 
 type Result<T> = std::result::Result<T, Error>;
 

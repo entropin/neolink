@@ -869,6 +869,7 @@ dependencies = [
  "aes",
  "cfb-mode",
  "cookie-factory",
+ "crossbeam",
  "env_logger",
  "err-derive",
  "indoc",

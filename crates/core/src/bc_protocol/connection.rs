@@ -7,9 +7,9 @@ use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 use std::error::Error as StdErr; // Just need the traits
 use std::net::{Shutdown, SocketAddr, TcpStream};
-use std::sync::mpsc::{channel, Receiver, Sender};
 use std::sync::{atomic::AtomicBool, atomic::Ordering, Arc, Mutex};
 use std::thread::JoinHandle;
+use crossbeam::{Receiver, Sender, unbounded};
 use std::time::Duration;
 
 /// A shareable connection to a camera.  Handles serialization of messages.  To send/receive, call
@@ -92,7 +92,7 @@ impl BcConnection {
     }
 
     pub fn subscribe(&self, msg_id: u32) -> Result<BcSubscription> {
-        let (tx, rx) = channel();
+        let (tx, rx) = unbounded::<Bc>();
         match self.subscribers.lock().unwrap().entry(msg_id) {
             Entry::Vacant(vac_entry) => vac_entry.insert(tx),
             Entry::Occupied(_) => return Err(Error::SimultaneousSubscription { msg_id }),
