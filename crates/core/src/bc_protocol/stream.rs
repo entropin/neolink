@@ -1,3 +1,5 @@
+use std::{ops::Deref, sync::Arc};
+
 use super::{BcCamera, BinarySubscriber, Result};
 use crate::{
     bc::{model::*, xml::*},
@@ -12,7 +14,7 @@ pub type StreamOutputError = Result<()>;
 /// audio and video data back to
 pub trait StreamOutput {
     /// This is the callback raised a complete media packet is received
-    fn write(&mut self, media: BcMedia) -> StreamOutputError;
+    fn write(&mut self, media: &BcMedia) -> StreamOutputError;
 }
 
 impl BcCamera {
@@ -72,7 +74,13 @@ impl BcCamera {
         loop {
             let bc_media = BcMedia::deserialize(&mut media_sub)?;
             // We now have a complete interesting packet. Send it to on the callback
-            data_outs.write(bc_media)?;
+            let arc_bc_media = Arc::new(bc_media);
+
+            for function  in &self.subscribers {
+                function(arc_bc_media.clone());
+            }
+            
+            data_outs.write(arc_bc_media.clone());
         }
     }
 }

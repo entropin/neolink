@@ -29,10 +29,12 @@
 /// ```
 ///
 use anyhow::{Context, Result};
+use crossbeam::Receiver;
 use log::*;
 use neolink_core::bc_protocol::BcCamera;
 use neolink_core::Never;
-use std::collections::HashSet;
+use neolink_core::bcmedia::model::BcMedia;
+use std::{borrow::BorrowMut, collections::HashSet};
 use std::fs;
 use std::sync::Arc;
 use std::time::Duration;
@@ -49,10 +51,17 @@ pub(crate) use cmdline::Opt;
 use config::{CameraConfig, Config, UserConfig};
 use gst::{GstOutputs, RtspServer, TlsAuthenticationMode};
 
+type BcMediaReciver = HashMap<String,Option(Receiver<BcMedia>)>;
 /// Entry point for the rtsp subcommand
 ///
 /// Opt is the command line options
 pub fn main(opt: Opt) -> Result<()> {
+    process_video(opt, None);
+    Ok();
+}
+
+///
+pub fn process_video(opt: Opt, reciver: Option(BcMediaReciver) -> Result<()>{
     let config: Config = toml::from_str(
         &fs::read_to_string(&opt.config)
             .with_context(|| format!("Failed to read {:?}", &opt.config))?,
@@ -251,6 +260,15 @@ fn camera_main(
         if manage {
             do_camera_management(&mut camera, camera_config).context("Failed to manage the camera settings")?;
         }
+
+
+       fn add(media:Arc<BcMedia>){
+
+        }
+        
+  
+        let test = camera.subscribers.push(add);
+
 
         info!(
             "{}: Starting video stream {}",

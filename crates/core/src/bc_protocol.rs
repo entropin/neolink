@@ -1,8 +1,10 @@
 use self::connection::BcConnection;
+use crate::bcmedia::model::BcMedia;
 use crate::{bc, bcmedia};
 use log::*;
 use std::convert::TryInto;
 use std::net::ToSocketAddrs;
+use std::sync::Arc;
 use std::sync::atomic::{AtomicU16, Ordering};
 use std::time::Duration;
 
@@ -50,6 +52,8 @@ pub struct BcCamera {
     message_num: AtomicU16,
     // Certain commands such as logout require the username/pass in plain text.... why....???
     credentials: Option<Credentials>,
+    /// Holds callbacks functions that all will recive the BcMedia data
+    pub subscribers: Vec<fn(Arc<BcMedia>)>
 }
 
 // Used for caching the credentials
@@ -106,13 +110,16 @@ impl BcCamera {
             };
 
             debug!("Success: {}", addr);
-            return Ok(Self {
+            let mut mut_cam = Self {
                 connection: Some(conn),
                 message_num: AtomicU16::new(0),
                 channel_id,
                 logged_in: false,
                 credentials: None,
-            });
+                subscribers: Vec::new()
+            };
+
+            return Ok(mut_cam);
         }
 
         Err(Error::Timeout)
